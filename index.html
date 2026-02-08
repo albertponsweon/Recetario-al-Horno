@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recetario al Horno</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#101a2f; --card2:#0f1930; --txt:#eaf0ff; --muted:#a9b7dd;
+      --acc:#7c5cff; --acc2:#22c55e; --line:rgba(255,255,255,.08);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius:18px;
+      --radius2:14px;
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(124,92,255,.35), transparent 60%),
+                  radial-gradient(900px 600px at 95% 10%, rgba(34,197,94,.20), transparent 55%),
+                  linear-gradient(180deg, #070c16, #0b1220 30%, #070c16);
+      color:var(--txt);
+      min-height:100vh;
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:28px 16px 46px}
+    header{
+      display:flex; gap:14px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;
+      padding:20px; border:1px solid var(--line); border-radius:var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow);
+    }
+    .brand{display:flex; gap:12px; align-items:center}
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(34,197,94,.75));
+      box-shadow: 0 10px 30px rgba(124,92,255,.25);
+    }
+    h1{margin:0; font-size:20px; letter-spacing:.2px}
+    .sub{margin:4px 0 0; color:var(--muted); font-size:13px}
+    .tools{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .search{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px; border-radius:14px; border:1px solid var(--line);
+      background: rgba(0,0,0,.18);
+      min-width:280px;
+    }
+    .search input{
+      width:100%; border:0; outline:none; background:transparent; color:var(--txt);
+      font-size:14px;
+    }
+    .chipbar{display:flex; gap:10px; flex-wrap:wrap; margin:18px 0 10px}
+    .chip{
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding:10px 12px; border-radius:999px;
+      color:var(--txt); font-size:13px;
+      cursor:pointer; user-select:none;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease;
+    }
+    .chip:hover{transform: translateY(-1px); background: rgba(255,255,255,.06)}
+    .chip.active{
+      border-color: rgba(124,92,255,.55);
+      background: rgba(124,92,255,.18);
+    }
+    .meta{
+      margin:8px 0 0; color:var(--muted); font-size:12px;
+    }
+    .grid{
+      display:grid; gap:14px;
+      grid-template-columns: repeat(12, 1fr);
+      margin-top:14px;
+    }
+    .card{
+      grid-column: span 6;
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.12));
+      box-shadow: 0 14px 40px rgba(0,0,0,.28);
+      overflow:hidden;
+    }
+    @media (max-width: 900px){ .card{grid-column: span 12} .search{min-width:220px} }
+    .cardHead{
+      padding:16px 16px 12px;
+      display:flex; justify-content:space-between; gap:10px; align-items:flex-start;
+    }
+    .title{margin:0; font-size:16px; line-height:1.25}
+    .badge{
+      font-size:12px; color:#0b1220;
+      background: rgba(34,197,94,.95);
+      padding:6px 10px; border-radius:999px;
+      white-space:nowrap;
+    }
+    .badge.v{background: rgba(34,197,94,.95)}
+    .badge.c{background: rgba(251,191,36,.95)}
+    .badge.p{background: rgba(59,130,246,.95); color:#071022}
+    .badge.l{background: rgba(244,114,182,.95); color:#071022}
+    .badge.f{background: rgba(124,92,255,.95)}
+    details{
+      border-top:1px solid var(--line);
+      padding:0 16px 14px;
+    }
+    summary{
+      list-style:none; cursor:pointer; padding:12px 0;
+      display:flex; justify-content:space-between; gap:10px; align-items:center;
+      color:var(--muted); font-size:13px;
+    }
+    summary::-webkit-details-marker{display:none}
+    .kpis{display:flex; flex-wrap:wrap; gap:8px}
+    .kpi{
+      font-size:12px; color:var(--txt);
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.04);
+      padding:6px 10px; border-radius:999px;
+    }
+    .content{
+      display:grid; gap:12px; padding-bottom:6px;
+      grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: 650px){ .content{grid-template-columns:1fr} }
+    .box{
+      border:1px solid var(--line);
+      border-radius: var(--radius2);
+      background: rgba(0,0,0,.18);
+      padding:12px 12px 10px;
+    }
+    .box h3{margin:0 0 8px; font-size:13px; color:var(--muted); letter-spacing:.2px}
+    .box p{margin:0; font-size:13px; line-height:1.5}
+    .box ul{margin:0; padding-left:18px; font-size:13px; line-height:1.5}
+    .foot{
+      margin-top:18px; color:var(--muted); font-size:12px;
+      text-align:center; opacity:.9;
+    }
+    .empty{
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius: var(--radius);
+      padding:18px; color:var(--muted); text-align:center;
+      background: rgba(255,255,255,.03);
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Recetario al Horno</h1>
+          <div class="sub">Categorías, buscador y recetas desplegables (clic para abrir).</div>
+          <div class="meta" id="meta"></div>
+        </div>
+      </div>
+
+      <div class="tools">
+        <div class="search" title="Busca por nombre, ingredientes o texto">
+          🔎 <input id="q" type="search" placeholder="Buscar: pollo, calabacín, tomate..." autocomplete="off" />
+        </div>
+      </div>
+    </header>
+
+    <div class="chipbar" id="chips"></div>
+    <div class="grid" id="grid"></div>
+
+    <div class="foot">Consejo: también puedes usar Ctrl+F para buscar dentro del navegador.</div>
+  </div>
+
+  <script>
+    // ====== DATOS (NO TOCAR AQUÍ) ======
+    const RECIPES = [
+      // === VERDURAS (V) ===
+      {c:"V",t:"Calabacín, cebolla y pimiento al horno",r:"1 persona",p:"Guarnición o plato base",tm:"40 min",ing:["Calabacín 200 g","Pimiento rojo 120 g","Cebolla 80 g","Aceite de oliva virgen extra 10 g","Sal y pimienta"],prep:"Lavar y cortar en trozos medianos similares. Colocar en la bandeja, añadir aceite, sal y pimienta, y mezclar.",cook:"190 °C · 35–40 min · Remover a mitad de cocción",val:"Versátil: base para carne, pescado o huevos. Baja densidad calórica."},
+      {c:"V",t:"Berenjena y tomate al horno con hierbas",r:"1 persona",p:"Guarnición o plato vegetal",tm:"40 min",ing:["Berenjena 250 g","Tomate maduro 150 g","Aceite de oliva virgen extra 10 g","Hierbas secas (orégano/albahaca)","Sal"],prep:"Cortar la berenjena en rodajas y el tomate en dados. Aliñar y repartir de forma uniforme.",cook:"190 °C · 40 min",val:"Digestivo; combina con pescado o legumbres."},
+      {c:"V",t:"Calabaza asada con especias suaves",r:"1 persona",p:"Guarnición",tm:"45 min",ing:["Calabaza 300 g","Aceite de oliva virgen extra 10 g","Pimentón dulce o cúrcuma","Sal"],prep:"Pelar y cortar en dados. Aliñar con aceite, sal y especias.",cook:"200 °C · 45 min",val:"Textura suave y dulzor natural; buena en días activos."},
+      {c:"V",t:"Brócoli y coliflor al horno",r:"1 persona",p:"Guarnición",tm:"35 min",ing:["Brócoli 200 g","Coliflor 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Separar en ramilletes, aliñar y repartir.",cook:"200 °C · 35 min",val:"Mucha fibra y micronutrientes; más digestivo que hervido."},
+      {c:"V",t:"Zanahoria y cebolla al horno",r:"1 persona",p:"Guarnición",tm:"40 min",ing:["Zanahoria 250 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Zanahoria en bastones, cebolla en tiras. Aliñar y mezclar.",cook:"200 °C · 40 min",val:"Sencillo, punto dulce; combina con carne o pescado."},
+      {c:"V",t:"Judía verde y zanahoria al horno",r:"1 persona",p:"Guarnición",tm:"35 min",ing:["Judía verde 250 g","Zanahoria 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Limpiar, cortar si hace falta; zanahoria fina. Aliñar y mezclar.",cook:"190 °C · 35 min",val:"Mejor textura que hervida."},
+      {c:"V",t:"Pimientos asados al horno",r:"1 persona",p:"Base vegetal",tm:"45 min",ing:["Pimiento rojo 300 g","Aceite de oliva virgen extra 10 g"],prep:"Poner enteros o en tiras gruesas en la bandeja.",cook:"220 °C · 45 min",val:"Ideal para ensaladas, tortillas y para varios días."},
+      {c:"V",t:"Espárragos verdes al horno",r:"1 persona",p:"Guarnición ligera",tm:"25 min",ing:["Espárragos verdes 250 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Lavar, colocar y aliñar.",cook:"190 °C · 20–25 min",val:"Muy ligero para cenas suaves."},
+      {c:"V",t:"Champiñones al horno con ajo y perejil",r:"1 persona",p:"Guarnición",tm:"30 min",ing:["Champiñones 300 g","Aceite de oliva virgen extra 10 g","Ajo 1/2 diente","Perejil","Sal"],prep:"Limpiar, cortar en cuartos. Añadir aceite, ajo picado y sal.",cook:"190 °C · 30 min",val:"Mucho sabor con pocas calorías."},
+      {c:"V",t:"Col al horno con aceite de oliva",r:"1 persona",p:"Guarnición",tm:"40 min",ing:["Col blanca o lombarda 300 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cortar en tiras gruesas, aliñar y mezclar.",cook:"200 °C · 40 min",val:"Mejora digestibilidad y sabor vs cruda."},
+      {c:"V",t:"Calabacín al horno con queso fresco",r:"1 persona",p:"Guarnición o plato vegetal ligero",tm:"35 min",ing:["Calabacín 300 g","Queso fresco 60 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Rodajas; hornear parcialmente y añadir el queso desmigado al final.",cook:"190 °C · 25 min + 10 min con queso",val:"Cena ligera con pequeño aporte proteico."},
+      {c:"V",t:"Berenjena al horno en rodajas",r:"1 persona",p:"Guarnición",tm:"40 min",ing:["Berenjena 300 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Lavar, rodajas medianas, una sola capa, aliñar.",cook:"200 °C · 35–40 min",val:"Muy versátil: base para carne/pescado/huevos."},
+      {c:"V",t:"Tomate cherry y cebolla al horno",r:"1 persona",p:"Guarnición o base vegetal",tm:"30 min",ing:["Tomate cherry 250 g","Cebolla 80 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tomates enteros o mitades; cebolla fina; aliñar suave.",cook:"190 °C · 30 min",val:"Para pescado, huevos o ensaladas templadas."},
+      {c:"V",t:"Calabaza y cebolla al horno",r:"1 persona",p:"Guarnición",tm:"45 min",ing:["Calabaza 300 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Dados y tiras; aliñar y mezclar.",cook:"200 °C · 45 min",val:"Hidratos suaves y saciedad."},
+      {c:"V",t:"Espinacas al horno con cebolla",r:"1 persona",p:"Guarnición ligera",tm:"25 min",ing:["Espinacas frescas 250 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Escurrir bien; cebolla fina; aliñar y repartir.",cook:"190 °C · 25 min",val:"Fácil, menos manipulación que salteadas."},
+      {c:"V",t:"Judía verde al horno con tomate cherry",r:"1 persona",p:"Guarnición",tm:"30 min",ing:["Judía verde 250 g","Tomate cherry 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Limpiar; poner con los tomates; aliñar.",cook:"190 °C · 30 min",val:"Combina con carne o pescado."},
+      {c:"V",t:"Remolacha al horno",r:"1 persona",p:"Guarnición",tm:"50 min",ing:["Remolacha cruda 300 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Pelar y cortar en dados; aliñar.",cook:"200 °C · 50 min",val:"Antioxidantes y dulzor natural."},
+      {c:"V",t:"Col lombarda al horno",r:"1 persona",p:"Guarnición",tm:"40 min",ing:["Col lombarda 300 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tiras gruesas; aliñar.",cook:"200 °C · 40 min",val:"Mejora sabor y digestibilidad."},
+      {c:"V",t:"Espárragos blancos al horno",r:"1 persona",p:"Guarnición ligera",tm:"30 min",ing:["Espárragos blancos frescos 250 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Limpiar, colocar y aliñar.",cook:"190 °C · 30 min",val:"Ligero y fácil de digerir."},
+      {c:"V",t:"Bandeja de verduras base para la semana",r:"1 persona (varias tomas)",p:"Base vegetal",tm:"45 min",ing:["Mezcla de verduras 600 g (calabacín, pimiento, cebolla, zanahoria)","Aceite de oliva virgen extra 15 g","Sal"],prep:"Cortar y aliñar; bandeja grande.",cook:"200 °C · 45 min",val:"Clave para tener verdura lista varios días."},
+      {c:"V",t:"Verduras al horno con toque de ajo y perejil",r:"1 persona",p:"Guarnición o base vegetal",tm:"40 min",ing:["Calabacín 150 g","Pimiento rojo 120 g","Cebolla 80 g","Ajo 1/2 diente","Aceite de oliva virgen extra 10 g","Perejil y sal"],prep:"Cortar; ajo muy fino; aliñar y mezclar.",cook:"190 °C · 40 min · Remover a mitad de cocción",val:"Aromático y versátil."},
+      {c:"V",t:"Coliflor al horno con pimentón dulce",r:"1 persona",p:"Guarnición",tm:"35 min",ing:["Coliflor 350 g","Aceite de oliva virgen extra 10 g","Pimentón dulce","Sal"],prep:"Ramilletes; aliñar con aceite, sal y pimentón.",cook:"200 °C · 35 min",val:"Sacia y encaja bien con proteínas."},
+      {c:"V",t:"Zanahoria al horno con tomillo",r:"1 persona",p:"Guarnición",tm:"40 min",ing:["Zanahoria 300 g","Aceite de oliva virgen extra 10 g","Tomillo seco","Sal"],prep:"Bastones; aliñar.",cook:"200 °C · 40 min",val:"Dulzor natural; ideal con carne blanca."},
+      {c:"V",t:"Calabacín y champiñones al horno",r:"1 persona",p:"Guarnición",tm:"35 min",ing:["Calabacín 200 g","Champiñones 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Medias lunas y cuartos; aliñar.",cook:"190 °C · 35 min",val:"Textura variada; con huevos o pescado."},
+      {c:"V",t:"Pimientos verdes y cebolla al horno",r:"1 persona",p:"Guarnición",tm:"40 min",ing:["Pimiento verde 250 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tiras; aliñar.",cook:"200 °C · 40 min",val:"Muy adecuado para pescado o legumbres."},
+      {c:"V",t:"Calabaza y zanahoria al horno",r:"1 persona",p:"Guarnición",tm:"45 min",ing:["Calabaza 200 g","Zanahoria 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Dados; aliñar.",cook:"200 °C · 45 min",val:"Sacia; para días con más actividad."},
+      {c:"V",t:"Judía verde al horno con ajo suave",r:"1 persona",p:"Guarnición",tm:"30 min",ing:["Judía verde 250 g","Ajo 1/2 diente","Aceite de oliva virgen extra 10 g","Sal"],prep:"Aliñar con ajo picado.",cook:"190 °C · 30 min",val:"Sabor más intenso, igual de ligero."},
+      {c:"V",t:"Berenjena y calabacín al horno",r:"1 persona",p:"Guarnición",tm:"40 min",ing:["Berenjena 200 g","Calabacín 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Rodajas gruesas; una capa; aliñar.",cook:"200 °C · 40 min",val:"Mediterráneo; fácil de reutilizar."},
+      {c:"V",t:"Tomate al horno con orégano",r:"1 persona",p:"Guarnición o base vegetal",tm:"30 min",ing:["Tomate grande 300 g","Aceite de oliva virgen extra 10 g","Orégano","Sal"],prep:"Rodajas gruesas; aliñar.",cook:"180 °C · 30 min",val:"Ideal con pescado blanco o huevos."},
+      {c:"V",t:"Base vegetal al horno para platos rápidos",r:"1 persona (varias tomas)",p:"Base vegetal",tm:"45 min",ing:["Verduras variadas 500 g (calabacín, pimiento, cebolla, zanahoria)","Aceite de oliva virgen extra 15 g","Sal"],prep:"Cortar, aliñar, bandeja grande.",cook:"200 °C · 45 min",val:"Clave para semana sin cocinar cada día."},
+
+      // === CARNES (C) ===
+      {c:"C",t:"Pechuga de pollo al horno con hierbas mediterráneas",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Pechuga de pollo 180 g","Aceite de oliva virgen extra 10 g","Orégano/tomillo/hierbas","Sal y pimienta"],prep:"Secar, colocar en la bandeja, aliñar por toda la superficie.",cook:"190 °C · 35–40 min · Dar la vuelta a mitad de cocción",val:"Mucha proteína; fácil de combinar; ideal para varias raciones."},
+      {c:"C",t:"Muslo de pollo al horno con cebolla",r:"1 persona",p:"Plato principal",tm:"50 min",ing:["Muslo de pollo 1 ud (220–250 g)","Cebolla 150 g","Aceite de oliva virgen extra 10 g","Sal y pimienta"],prep:"Cebolla en tiras en la base; muslo encima con la piel hacia arriba; salpimentar.",cook:"200 °C · 45–50 min · Dar la vuelta a los 30 min",val:"Saciante y sabroso."},
+      {c:"C",t:"Albóndigas de pollo al horno",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Carne picada de pollo 200 g","Huevo pequeño 1 (50 g)","Ajo 1/2 diente","Perejil","Sal"],prep:"Mezclar, formar albóndigas, sobre papel de horno.",cook:"190 °C · 30–35 min · Dar la vuelta a mitad de cocción",val:"Prácticas para hacer cantidad."},
+      {c:"C",t:"Hamburguesa casera de ternera al horno",r:"1 persona",p:"Plato principal",tm:"25 min",ing:["Ternera magra picada 150 g","Sal y pimienta"],prep:"Formar la hamburguesa sin compactar demasiado.",cook:"190 °C · 25 min · Dar la vuelta a mitad de cocción",val:"Más saludable que frita."},
+      {c:"C",t:"Lomo de cerdo al horno con manzana",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Lomo de cerdo 170 g","Manzana 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Manzana en gajos en la base; lomo encima; aliñar.",cook:"190 °C · 40 min",val:"Equilibrado y digestivo."},
+      {c:"C",t:"Pechuga de pavo al horno con especias suaves",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Pechuga de pavo 180 g","Aceite de oliva virgen extra 10 g","Pimienta blanca o pimentón suave","Sal"],prep:"Aliñar y poner en la bandeja.",cook:"190 °C · 35 min",val:"Carne magra para pérdida de grasa."},
+      {c:"C",t:"Costillas de cerdo al horno con hierbas",r:"1 persona",p:"Plato principal",tm:"45 min",ing:["Costillas de cerdo 220 g","Aceite de oliva virgen extra 10 g","Hierbas aromáticas","Sal"],prep:"Aliñar y colocar en la bandeja.",cook:"200 °C · 45 min · Dar la vuelta a mitad de cocción",val:"Más contundente, ocasional."},
+      {c:"C",t:"Ternera al horno con calabaza",r:"1 persona",p:"Plato principal",tm:"45 min",ing:["Ternera magra 170 g","Calabaza 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabaza en dados en la base; ternera encima; aliñar.",cook:"200 °C · 45 min",val:"Completo y saciante."},
+      {c:"C",t:"Pollo al horno con tomate cherry",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Pechuga de pollo 180 g","Tomate cherry 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tomates en la base; pollo encima; aliñar.",cook:"190 °C · 35 min",val:"Ligero y fácil de digerir."},
+      {c:"C",t:"Carne picada magra al horno con verduras",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Carne picada magra 200 g","Verduras variadas 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Mezclar suave y repartir en la bandeja.",cook:"190 °C · 40 min",val:"Fácil y reutilizable."},
+      {c:"C",t:"Pechuga de pollo al horno con mostaza a la antigua",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Pechuga de pollo 180 g","Mostaza a la antigua 15 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Mezclar mostaza+aceite y untar; salar ligero.",cook:"190 °C · 35–40 min · Dar la vuelta a mitad de cocción",val:"Sabor sin salsas grasientas."},
+      {c:"C",t:"Muslo de pollo al horno con pimiento y cebolla",r:"1 persona",p:"Plato principal",tm:"50 min",ing:["Muslo de pollo 1 ud (220–250 g)","Pimiento rojo 150 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Pimiento y cebolla en tiras en la base; muslo encima; aliñar.",cook:"200 °C · 45–50 min",val:"Completo con verduras integradas."},
+      {c:"C",t:"Albóndigas de ternera magra al horno",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Ternera magra picada 200 g","Huevo pequeño 1","Ajo 1/2 diente","Perejil","Sal"],prep:"Mezclar, formar albóndigas, papel de horno.",cook:"190 °C · 30–35 min",val:"Prácticas para conservar."},
+      {c:"C",t:"Hamburguesa de pavo al horno",r:"1 persona",p:"Plato principal",tm:"25 min",ing:["Pavo picado 150 g","Sal y pimienta"],prep:"Formar hamburguesa y poner en la bandeja.",cook:"190 °C · 25 min",val:"Muy magra; cenas ligeras."},
+      {c:"C",t:"Lomo de cerdo al horno con cebolla caramelizada suave",r:"1 persona",p:"Plato principal",tm:"45 min",ing:["Lomo de cerdo 170 g","Cebolla 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla en la base; lomo encima; aliñar.",cook:"190 °C · 45 min",val:"Sabroso sin azúcar."},
+      {c:"C",t:"Pollo al horno con calabacín",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Pechuga de pollo 180 g","Calabacín 250 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabacín en rodajas en la base; pollo encima; aliñar.",cook:"190 °C · 40 min",val:"Ligero y digestivo."},
+      {c:"C",t:"Ternera al horno con patata",r:"1 persona",p:"Plato principal",tm:"50 min",ing:["Ternera magra 180 g","Patata 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Patata en rodajas finas y hornear antes de añadir la carne.",cook:"Patata: 200 °C · 25 min | Con carne: 190 °C · 20–25 min",val:"Muy saciante."},
+      {c:"C",t:"Costillas de cordero al horno (ocasional)",r:"1 persona",p:"Plato principal",tm:"45 min",ing:["Costillas de cordero 220 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Aliñar y poner en la bandeja.",cook:"200 °C · 45 min",val:"Más graso; consumo puntual."},
+      {c:"C",t:"Pollo al horno con limón",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Pechuga de pollo 180 g","Limón 1/2","Aceite de oliva virgen extra 10 g","Sal"],prep:"Pollo con rodajas de limón.",cook:"190 °C · 35 min",val:"Fresco y ligero."},
+      {c:"C",t:"Carne magra al horno con verduras variadas",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Carne magra (pollo o ternera) 180 g","Verduras variadas 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Todo junto en la bandeja, aliñado suave.",cook:"190 °C · 40 min",val:"Práctico y equilibrado."},
+      {c:"C",t:"Pechuga de pollo al horno con pimiento asado",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Pechuga de pollo 180 g","Pimiento rojo asado 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Pimiento en tiras en la base; pollo encima.",cook:"190 °C · 40 min · Dar la vuelta a mitad de cocción",val:"Mediterráneo y digestivo."},
+      {c:"C",t:"Pollo al horno con patata y romero",r:"1 persona",p:"Plato principal",tm:"50 min",ing:["Pollo (muslo o pechuga) 200 g","Patata 200 g","Aceite de oliva virgen extra 10 g","Romero","Sal"],prep:"Patata con aceite, sal y romero; pollo encima.",cook:"200 °C · 45–50 min",val:"Plato completo."},
+      {c:"C",t:"Ternera al horno con cebolla y pimiento",r:"1 persona",p:"Plato principal",tm:"45 min",ing:["Ternera magra 180 g","Cebolla 120 g","Pimiento verde 120 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla y pimiento en tiras en la base; ternera encima; aliñar.",cook:"200 °C · 45 min",val:"Rica en hierro y proteína."},
+      {c:"C",t:"Hamburguesa de ternera con cebolla al horno",r:"1 persona",p:"Plato principal",tm:"30 min",ing:["Ternera magra picada 150 g","Cebolla 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla en rodajas en la base; hamburguesa encima; aliñar.",cook:"190 °C · 30 min · Dar la vuelta a mitad de cocción",val:"Alternativa a la plancha."},
+      {c:"C",t:"Pechuga de pavo al horno con limón",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Pavo 180 g","Limón 1/2","Aceite de oliva virgen extra 10 g","Sal"],prep:"Con rodajas de limón.",cook:"190 °C · 35 min",val:"Ideal para cenas ligeras."},
+      {c:"C",t:"Lomo de cerdo al horno con calabacín",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Lomo de cerdo 170 g","Calabacín 250 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabacín en rodajas en la base; lomo encima.",cook:"190 °C · 40 min",val:"Sencillo y digestivo."},
+      {c:"C",t:"Pollo al horno con cebolla y ajo",r:"1 persona",p:"Plato principal",tm:"45 min",ing:["Pollo 200 g","Cebolla 150 g","Ajo 1/2 diente","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla en tiras + ajo picado en la base; pollo encima.",cook:"200 °C · 45 min",val:"Clásico y aromático."},
+      {c:"C",t:"Ternera al horno con calabaza y zanahoria",r:"1 persona",p:"Plato principal",tm:"50 min",ing:["Ternera magra 180 g","Calabaza 150 g","Zanahoria 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Verduras en la base; ternera encima; aliñar.",cook:"200 °C · 50 min",val:"Nutritivo y saciante."},
+      {c:"C",t:"Pollo al horno con tomate y orégano",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Pechuga de pollo 180 g","Tomate 200 g","Aceite de oliva virgen extra 10 g","Orégano","Sal"],prep:"Tomate en trozos en la base; pollo encima; aliñar.",cook:"190 °C · 35 min",val:"Ligero y mediterráneo."},
+      {c:"C",t:"Bandeja única de carne y verduras al horno",r:"1 persona",p:"Plato principal completo",tm:"45 min",ing:["Carne magra 180 g (pollo/pavo/ternera)","Verduras variadas 250 g","Aceite de oliva virgen extra 15 g","Sal"],prep:"Todo junto bien repartido y aliñado.",cook:"200 °C · 45 min",val:"Cocinas una vez y tienes comidas resueltas."},
+
+      // === PESCADO (P) ===
+      {c:"P",t:"Salmón al horno con limón",r:"1 persona",p:"Plato principal",tm:"20 min",ing:["Salmón fresco 150 g","Limón 1/2","Aceite de oliva virgen extra 5 g","Sal"],prep:"Salmón con la piel hacia abajo; rodajas de limón; aceite y sal.",cook:"180 °C · 18–20 min",val:"Omega-3; ideal para cena."},
+      {c:"P",t:"Merluza al horno con patata y cebolla",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Merluza 160 g","Patata 180 g","Cebolla 80 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Patata+cebolla en rodajas; hornear antes de añadir el pescado.",cook:"Patata+cebolla: 190 °C · 20 min | + merluza: 10–12 min",val:"Completo y ligero."},
+      {c:"P",t:"Bacalao al horno con tomate",r:"1 persona",p:"Plato principal",tm:"30 min",ing:["Bacalao desalado 160 g","Tomate triturado 200 g","Aceite de oliva virgen extra 10 g","Sal (si hace falta)"],prep:"Cubrir con tomate y aceite.",cook:"180 °C · 25–30 min",val:"Mediterráneo y suave."},
+      {c:"P",t:"Dorada al horno con verduras",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Dorada 1 ud (300 g)","Calabacín 150 g","Cebolla 80 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Verduras en la base; dorada encima; aliñar.",cook:"190 °C · 30–35 min",val:"Pescado blanco digestivo."},
+      {c:"P",t:"Lubina al horno con patata",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Lubina 1 ud (300 g)","Patata 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Patata parcial antes de añadir el pescado.",cook:"Patata: 200 °C · 25 min | + pescado: 190 °C · 15 min",val:"Saciante con poca carga calórica."},
+      {c:"P",t:"Sepia al horno con cebolla",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Sepia 200 g","Cebolla 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla en tiras en la base; sepia encima.",cook:"190 °C · 35 min",val:"Baja en grasa, alta en proteína."},
+      {c:"P",t:"Atún fresco al horno con soja suave",r:"1 persona",p:"Plato principal",tm:"15 min",ing:["Atún fresco 150 g","Soja baja en sal 10 ml","Aceite de oliva virgen extra 5 g"],prep:"Aliñar suave con soja y aceite.",cook:"180 °C · 12–15 min",val:"Cocción corta para buena textura."},
+      {c:"P",t:"Sardinas al horno",r:"1 persona",p:"Plato principal",tm:"20 min",ing:["Sardinas 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"En una sola capa, aliñar.",cook:"200 °C · 20 min",val:"Económico y nutritivo."},
+      {c:"P",t:"Langostinos al horno con ajo y perejil",r:"1 persona",p:"Plato principal ligero",tm:"15 min",ing:["Langostinos 200 g","Ajo 1/2 diente","Aceite de oliva virgen extra 10 g","Perejil"],prep:"Todo a la bandeja con ajo y perejil.",cook:"190 °C · 12–15 min",val:"Muy fácil."},
+      {c:"P",t:"Pescado blanco al horno con hinojo",r:"1 persona",p:"Plato principal",tm:"30 min",ing:["Pescado blanco 160 g","Hinojo 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Hinojo en la base; pescado encima.",cook:"190 °C · 30 min",val:"Digestivo."},
+      {c:"P",t:"Salmón al horno con calabacín y cebolla",r:"1 persona",p:"Plato principal",tm:"25 min",ing:["Salmón 150 g","Calabacín 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Verduras en la base; salmón encima; aliñar.",cook:"180 °C · 25 min",val:"Completo y ligero."},
+      {c:"P",t:"Merluza al horno con tomate cherry",r:"1 persona",p:"Plato principal",tm:"30 min",ing:["Merluza 160 g","Tomate cherry 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tomates en la base; merluza encima; aliñar.",cook:"190 °C · 30 min",val:"Suave para cualquier comida."},
+      {c:"P",t:"Bacalao al horno con pimiento asado",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Bacalao desalado 160 g","Pimiento asado 200 g","Aceite de oliva virgen extra 10 g","Sal (si hace falta)"],prep:"Pimiento en la base; bacalao encima; aliñar.",cook:"190 °C · 35 min",val:"Fácil con ensaladas."},
+      {c:"P",t:"Dorada al horno con patata y cebolla",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Dorada 1 ud","Patata 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Patata+cebolla parcial antes de añadir el pescado.",cook:"Patata+cebolla: 200 °C · 25 min | + pescado: 190 °C · 15 min",val:"Completo y saciante."},
+      {c:"P",t:"Lubina al horno con verduras suaves",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Lubina 1 ud","Calabacín 150 g","Cebolla 80 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Verduras en la base; pescado encima; aliñar.",cook:"190 °C · 35 min",val:"Digestivo para cenar."},
+      {c:"P",t:"Sepia al horno con pimiento verde",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Sepia 200 g","Pimiento verde 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Pimiento en tiras en la base; sepia encima.",cook:"190 °C · 35 min",val:"Ligero y rico en proteína."},
+      {c:"P",t:"Atún fresco al horno con verduras",r:"1 persona",p:"Plato principal",tm:"15 min",ing:["Atún 150 g","Verduras variadas 200 g","Aceite de oliva virgen extra 10 g"],prep:"Verduras en la base; atún encima.",cook:"180 °C · 12–15 min",val:"Atún jugoso."},
+      {c:"P",t:"Sardinas al horno con tomate",r:"1 persona",p:"Plato principal",tm:"25 min",ing:["Sardinas 200 g","Tomate 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Sardinas y tomate en la bandeja.",cook:"200 °C · 25 min",val:"Nutritivo."},
+      {c:"P",t:"Rape al horno con cebolla",r:"1 persona",p:"Plato principal",tm:"30 min",ing:["Rape 160 g","Cebolla 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla en la base; rape encima.",cook:"190 °C · 30 min",val:"Pescado firme ideal para horno."},
+      {c:"P",t:"Pescado blanco al horno con calabaza",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Pescado blanco 160 g","Calabaza 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabaza en la base; pescado encima.",cook:"190 °C · 35 min",val:"Suave y saciante."},
+      {c:"P",t:"Salmón al horno con tomate y albahaca",r:"1 persona",p:"Plato principal",tm:"25 min",ing:["Salmón 150 g","Tomate 200 g","Aceite de oliva virgen extra 10 g","Albahaca","Sal"],prep:"Tomate en la base; salmón encima; aceite, sal y albahaca.",cook:"180 °C · 25 min",val:"Mediterráneo y sabroso."},
+      {c:"P",t:"Merluza al horno con calabacín y cebolla",r:"1 persona",p:"Plato principal",tm:"30 min",ing:["Merluza 160 g","Calabacín 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Verduras en la base con aceite y sal; merluza encima.",cook:"190 °C · 30 min",val:"Ligero y digestivo."},
+      {c:"P",t:"Bacalao al horno con garbanzos y tomate",r:"1 persona",p:"Plato principal completo",tm:"35 min",ing:["Bacalao 160 g","Garbanzos cocidos 150 g","Tomate triturado 150 g","Aceite de oliva virgen extra 10 g"],prep:"Garbanzos+tomate en la base; bacalao encima.",cook:"190 °C · 35 min",val:"Proteína + hidratos suaves."},
+      {c:"P",t:"Dorada al horno con hinojo",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Dorada 1 ud","Hinojo 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Hinojo en la base; dorada encima; aliñar.",cook:"190 °C · 35 min",val:"Aromático y digestivo."},
+      {c:"P",t:"Lubina al horno con tomate y cebolla",r:"1 persona",p:"Plato principal",tm:"35 min",ing:["Lubina 1 ud","Tomate 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tomate+cebolla en la base; pescado encima.",cook:"190 °C · 35 min",val:"Clásico mediterráneo."},
+      {c:"P",t:"Sepia al horno con calabaza",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Sepia 200 g","Calabaza 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabaza en la base; sepia encima.",cook:"190 °C · 40 min",val:"Ligero pero saciante."},
+      {c:"P",t:"Atún al horno con pimiento asado",r:"1 persona",p:"Plato principal",tm:"20 min",ing:["Atún 150 g","Pimiento asado 200 g","Aceite de oliva virgen extra 10 g"],prep:"Pimiento en la base; atún encima.",cook:"180 °C · 15–20 min",val:"Preserva textura y nutrientes."},
+      {c:"P",t:"Sardinas al horno con cebolla",r:"1 persona",p:"Plato principal",tm:"25 min",ing:["Sardinas 200 g","Cebolla 150 g","Aceite de oliva virgen extra 10 g"],prep:"Cebolla en la base; sardinas encima.",cook:"200 °C · 25 min",val:"Sencillo y nutritivo."},
+      {c:"P",t:"Rape al horno con patata",r:"1 persona",p:"Plato principal",tm:"40 min",ing:["Rape 160 g","Patata 200 g","Aceite de oliva virgen extra 10 g"],prep:"Patata parcial antes de añadir el rape.",cook:"Patata: 200 °C · 25 min | + rape: 190 °C · 15 min",val:"Completo y saciante."},
+      {c:"P",t:"Bandeja única de pescado y verduras al horno",r:"1 persona",p:"Plato principal completo",tm:"40 min",ing:["Pescado 160 g","Verduras variadas 250 g","Aceite de oliva virgen extra 15 g","Sal"],prep:"Todo junto, bien repartido y aliñado.",cook:"200 °C · 40 min",val:"Comidas resueltas para la semana."},
+
+      // === LEGUMBRES (L) ===
+      {c:"L",t:"Garbanzos al horno con verduras mediterráneas",r:"1 persona",p:"Plato principal vegetal",tm:"40 min",ing:["Garbanzos cocidos 200 g","Calabacín 150 g","Pimiento rojo 120 g","Cebolla 80 g","Aceite de oliva virgen extra 10 g","Sal y pimienta"],prep:"Enjuagar y escurrir garbanzos; cortar verduras; aliñar y mezclar.",cook:"190 °C · 40 min · Remover a mitad de cocción",val:"Muy completo: fibra + proteína vegetal."},
+      {c:"L",t:"Lentejas al horno con tomate y cebolla",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Lentejas cocidas 200 g","Tomate triturado 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla en tiras con tomate; añadir lentejas; aliñar.",cook:"190 °C · 35 min",val:"Digestivo y tipo “plato tradicional” ligero."},
+      {c:"L",t:"Garbanzos crujientes al horno con especias suaves",r:"1 persona",p:"Plato vegetal o complemento",tm:"35 min",ing:["Garbanzos cocidos 200 g","Aceite de oliva virgen extra 10 g","Pimentón dulce o cúrcuma","Sal"],prep:"Lavar, escurrir y secar muy bien; aliñar y poner en una sola capa.",cook:"190 °C · 35 min",val:"Para plato ligero o ensaladas."},
+      {c:"L",t:"Alubias blancas al horno con calabacín",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Alubias blancas cocidas 200 g","Calabacín 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabacín en rodajas con alubias; aliñar.",cook:"190 °C · 35 min",val:"Suave y fácil de digerir."},
+      {c:"L",t:"Lentejas con verduras al horno",r:"1 persona",p:"Plato principal completo",tm:"40 min",ing:["Lentejas cocidas 200 g","Zanahoria 100 g","Pimiento verde 100 g","Cebolla 80 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Verduras pequeñas; mezclar con lentejas y aliñar.",cook:"190 °C · 40 min",val:"Muy saciante, ideal para comer."},
+      {c:"L",t:"Garbanzos al horno con espinacas y cebolla",r:"1 persona",p:"Plato principal vegetal",tm:"30 min",ing:["Garbanzos cocidos 200 g","Espinacas 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla con garbanzos; añadir espinacas en los últimos minutos.",cook:"190 °C · 20 min + 10 min con espinacas",val:"Clásico rico en hierro y fibra."},
+      {c:"L",t:"Alubias rojas al horno con tomate",r:"1 persona",p:"Plato principal vegetal",tm:"30 min",ing:["Alubias rojas 200 g","Tomate triturado 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Todo a la bandeja, aliñar y repartir.",cook:"190 °C · 30 min",val:"Sencillo, muy “de toda la vida”."},
+      {c:"L",t:"Garbanzos al horno con calabaza y cebolla",r:"1 persona",p:"Plato principal vegetal",tm:"45 min",ing:["Garbanzos 200 g","Calabaza 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Dados y tiras; mezclar con garbanzos y aliñar.",cook:"200 °C · 45 min",val:"Muy saciante."},
+      {c:"L",t:"Lentejas al horno con pimiento asado",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Lentejas 200 g","Pimiento asado 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Pimiento en la base; lentejas encima; aliñar.",cook:"190 °C · 35 min",val:"Muy mediterráneo."},
+      {c:"L",t:"Bandeja única de legumbres y verduras al horno",r:"1 persona",p:"Plato principal completo",tm:"40 min",ing:["Legumbre cocida 200 g (garbanzos o lentejas)","Verduras variadas 250 g","Aceite de oliva virgen extra 15 g","Sal"],prep:"Todo junto bien repartido y aliñado.",cook:"200 °C · 40 min",val:"Un solo horneado y resuelves varias comidas."},
+      {c:"L",t:"Lentejas al horno con calabacín y cebolla",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Lentejas 200 g","Calabacín 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabacín en rodajas y cebolla en tiras; mezclar suave.",cook:"190 °C · 35 min",val:"Digestivo para comer o cenar."},
+      {c:"L",t:"Garbanzos al horno con pimiento y cebolla",r:"1 persona",p:"Plato principal vegetal",tm:"40 min",ing:["Garbanzos 200 g","Pimiento rojo 150 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tiras; aliñar; remover a mitad de cocción.",cook:"190 °C · 40 min",val:"Parecido a platos habituales con menos trabajo."},
+      {c:"L",t:"Alubias blancas al horno con tomate y orégano",r:"1 persona",p:"Plato principal vegetal",tm:"30 min",ing:["Alubias blancas 200 g","Tomate triturado 200 g","Aceite de oliva virgen extra 10 g","Orégano","Sal"],prep:"En la bandeja con tomate, aceite, orégano y sal.",cook:"190 °C · 30 min",val:"Sencillo y reconfortante."},
+      {c:"L",t:"Garbanzos al horno con espinacas y tomate",r:"1 persona",p:"Plato principal vegetal",tm:"30 min",ing:["Garbanzos 200 g","Espinacas 200 g","Tomate triturado 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Garbanzos+tomate; espinacas en los últimos minutos.",cook:"190 °C · 20 min + 10 min con espinacas",val:"Hierro vegetal, saciante."},
+      {c:"L",t:"Lentejas al horno con zanahoria y pimiento",r:"1 persona",p:"Plato principal vegetal",tm:"40 min",ing:["Lentejas 200 g","Zanahoria 120 g","Pimiento verde 120 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Verduras pequeñas; mezclar y aliñar.",cook:"190 °C · 40 min",val:"Ideal para comidas."},
+      {c:"L",t:"Alubias rojas al horno con calabacín",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Alubias rojas 200 g","Calabacín 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabacín en rodajas con alubias; aliñar.",cook:"190 °C · 35 min",val:"Ligero y fácil."},
+      {c:"L",t:"Garbanzos al horno con berenjena",r:"1 persona",p:"Plato principal vegetal",tm:"45 min",ing:["Garbanzos 200 g","Berenjena 250 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Berenjena en dados con garbanzos; aliñar.",cook:"200 °C · 45 min",val:"Textura agradable y buen sabor."},
+      {c:"L",t:"Lentejas al horno con cebolla caramelizada suave",r:"1 persona",p:"Plato principal vegetal",tm:"45 min",ing:["Lentejas 200 g","Cebolla 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla primero unos minutos; añadir lentejas después.",cook:"Cebolla: 200 °C · 25 min | + lentejas: 190 °C · 20 min",val:"Reconfortante, estilo casero."},
+      {c:"L",t:"Alubias blancas al horno con espárragos",r:"1 persona",p:"Plato principal vegetal",tm:"30 min",ing:["Alubias blancas 200 g","Espárragos verdes 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Espárragos troceados + alubias; aliñar.",cook:"190 °C · 30 min",val:"Nutritivo para cenar."},
+      {c:"L",t:"Bandeja única de legumbres, verduras y especias suaves",r:"1 persona",p:"Plato principal completo",tm:"40 min",ing:["Legumbres 200 g","Verduras variadas 250 g","Aceite de oliva virgen extra 15 g","Sal"],prep:"Todo junto bien aliñado y repartido.",cook:"200 °C · 40 min",val:"Muy práctico."},
+      {c:"L",t:"Garbanzos al horno con tomate y cebolla morada",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Garbanzos 200 g","Tomate triturado 200 g","Cebolla morada 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla en tiras con tomate; añadir garbanzos; aliñar.",cook:"190 °C · 35 min",val:"Mediterráneo y fácil."},
+      {c:"L",t:"Lentejas al horno con espinacas y ajo suave",r:"1 persona",p:"Plato principal vegetal",tm:"30 min",ing:["Lentejas 200 g","Espinacas 200 g","Ajo 1/2 diente","Aceite de oliva virgen extra 10 g","Sal"],prep:"Lentejas + ajo; espinacas al final.",cook:"190 °C · 20 min + 10 min con espinacas",val:"Hierro y fibra, muy ligero."},
+      {c:"L",t:"Alubias blancas al horno con pimiento asado",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Alubias blancas 200 g","Pimiento asado 200 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Pimiento en la base; alubias encima; aliñar.",cook:"190 °C · 35 min",val:"Muy mediterráneo."},
+      {c:"L",t:"Garbanzos al horno con zanahoria y comino suave",r:"1 persona",p:"Plato principal vegetal",tm:"40 min",ing:["Garbanzos 200 g","Zanahoria 200 g","Aceite de oliva virgen extra 10 g","Comino molido","Sal"],prep:"Zanahoria en rodajas; aliñar con comino y sal.",cook:"200 °C · 40 min",val:"Toque especiado suave."},
+      {c:"L",t:"Lentejas al horno con calabaza",r:"1 persona",p:"Plato principal vegetal",tm:"45 min",ing:["Lentejas 200 g","Calabaza 250 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabaza en dados con lentejas; aliñar.",cook:"200 °C · 45 min",val:"Muy saciante."},
+      {c:"L",t:"Alubias rojas al horno con tomate y cebolla",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Alubias rojas 200 g","Tomate triturado 200 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Cebolla + tomate en la base; añadir alubias; aliñar.",cook:"190 °C · 35 min",val:"Similar a recetas tradicionales, más ligero."},
+      {c:"L",t:"Garbanzos al horno con berenjena y tomate",r:"1 persona",p:"Plato principal vegetal",tm:"45 min",ing:["Garbanzos 200 g","Berenjena 250 g","Tomate triturado 150 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Berenjena en dados; añadir garbanzos y tomate; aliñar.",cook:"200 °C · 45 min",val:"Plato único, sabroso."},
+      {c:"L",t:"Lentejas al horno con pimiento verde y cebolla",r:"1 persona",p:"Plato principal vegetal",tm:"40 min",ing:["Lentejas 200 g","Pimiento verde 150 g","Cebolla 100 g","Aceite de oliva virgen extra 10 g","Sal"],prep:"Tiras; mezclar y aliñar.",cook:"190 °C · 40 min",val:"Equilibrado y fácil."},
+      {c:"L",t:"Alubias blancas al horno con calabacín y ajo",r:"1 persona",p:"Plato principal vegetal",tm:"35 min",ing:["Alubias blancas 200 g","Calabacín 250 g","Ajo 1/2 diente","Aceite de oliva virgen extra 10 g","Sal"],prep:"Calabacín en rodajas + alubias + ajo; aliñar.",cook:"190 °C · 35 min",val:"Suave y digestivo."},
+      {c:"L",t:"Bandeja completa de legumbres al horno para la semana",r:"1 persona (varias tomas)",p:"Base vegetal completa",tm:"45 min",ing:["Legumbres cocidas variadas 300 g","Verduras variadas 300 g","Aceite de oliva virgen extra 15 g","Sal"],prep:"Bandeja grande, todo aliñado y repartido.",cook:"200 °C · 45 min",val:"Preparación clave para días sin cocinar."},
+
+      // === FRUTA (F) ===
+      {c:"F",t:"Manzana al horno con canela",r:"1 persona",p:"Postre o merienda",tm:"30 min",ing:["Manzana 1 ud (200 g)","Canela","Agua 30 ml"],prep:"Cortar por la mitad, quitar el corazón, añadir un poco de agua y canela.",cook:"180 °C · 30 min",val:"Sustituye dulces procesados."},
+      {c:"F",t:"Pera al horno con vainilla suave",r:"1 persona",p:"Postre",tm:"30 min",ing:["Pera 1 ud (200 g)","Esencia de vainilla (gotas)","Agua 30 ml"],prep:"Cortar por la mitad, añadir agua y vainilla.",cook:"180 °C · 30 min",val:"Muy suave para digestiones delicadas."},
+      {c:"F",t:"Manzana y pera al horno combinadas",r:"1 persona",p:"Postre",tm:"35 min",ing:["Manzana 100 g","Pera 100 g","Canela","Agua 30 ml"],prep:"Trozos grandes con canela y agua.",cook:"180 °C · 35 min",val:"Varías sin repetir."},
+      {c:"F",t:"Plátano al horno con cacao puro",r:"1 persona",p:"Merienda ocasional",tm:"20 min",ing:["Plátano 1 ud (150 g)","Cacao puro 5 g"],prep:"Corte longitudinal y cacao por encima.",cook:"180 °C · 20 min",val:"Ocasional."},
+      {c:"F",t:"Piña al horno con lima",r:"1 persona",p:"Postre",tm:"25 min",ing:["Piña 200 g","Zumo de lima (gotas)"],prep:"Rodajas y un toque de lima.",cook:"190 °C · 25 min",val:"Digestiva y refrescante."},
+      {c:"F",t:"Manzana al horno rellena de frutos secos",r:"1 persona",p:"Postre completo",tm:"35 min",ing:["Manzana 1 ud (200 g)","Nueces o almendras 15 g","Canela"],prep:"Vaciar un poco y rellenar con frutos secos picados.",cook:"180 °C · 35 min",val:"Más saciedad (grasa saludable)."},
+      {c:"F",t:"Melocotón al horno (temporada)",r:"1 persona",p:"Postre",tm:"25 min",ing:["Melocotón 2 uds (200 g)"],prep:"Cortar por la mitad y a la bandeja.",cook:"180 °C · 25 min",val:"Aromático y ligero."},
+      {c:"F",t:"Fruta al horno variada para la semana",r:"1 persona (varias tomas)",p:"Base de postres",tm:"35 min",ing:["Fruta variada 400 g (manzana, pera, plátano)","Canela"],prep:"Trozos grandes con canela.",cook:"180 °C · 35 min",val:"Postres listos para varios días."},
+      {c:"F",t:"Manzana al horno con yogur natural (añadido en frío)",r:"1 persona",p:"Postre completo",tm:"30 min",ing:["Manzana 200 g","Yogur natural 125 g"],prep:"Cocer la manzana y añadir el yogur cuando esté templada.",cook:"180 °C · 30 min",val:"Equilibrado con proteína."},
+      {c:"F",t:"Pera al horno con almendra laminada",r:"1 persona",p:"Postre",tm:"30 min",ing:["Pera 200 g","Almendra laminada 10 g"],prep:"Cubrir la pera con almendra.",cook:"180 °C · 30 min",val:"Crujiente y dulzor natural."},
+      {c:"F",t:"Manzana al horno con naranja y canela",r:"1 persona",p:"Postre",tm:"35 min",ing:["Manzana 200 g","Zumo de naranja 50 ml","Canela"],prep:"Trozos grandes + zumo + canela.",cook:"180 °C · 35 min",val:"Aromático y digestivo."},
+      {c:"F",t:"Pera al horno con manzana",r:"1 persona",p:"Postre",tm:"35 min",ing:["Pera 120 g","Manzana 120 g"],prep:"Trozos medianos a la bandeja.",cook:"180 °C · 35 min",val:"Clásico y suave."},
+      {c:"F",t:"Plátano al horno con manzana",r:"1 persona",p:"Merienda",tm:"25 min",ing:["Plátano 120 g","Manzana 120 g"],prep:"Rodajas gruesas.",cook:"180 °C · 25 min",val:"Merienda post-entrenamiento."},
+      {c:"F",t:"Piña al horno con manzana",r:"1 persona",p:"Postre",tm:"30 min",ing:["Piña 150 g","Manzana 100 g"],prep:"Trozos a la bandeja.",cook:"190 °C · 30 min",val:"Refrescante."},
+      {c:"F",t:"Melocotón y manzana al horno",r:"1 persona",p:"Postre",tm:"30 min",ing:["Melocotón 120 g","Manzana 120 g"],prep:"Por la mitad o en trozos grandes.",cook:"180 °C · 30 min",val:"Dulzor natural."},
+      {c:"F",t:"Manzana al horno con coco rallado",r:"1 persona",p:"Postre",tm:"30 min",ing:["Manzana 200 g","Coco rallado 10 g"],prep:"Añadir coco por encima.",cook:"180 °C · 30 min",val:"Más sabor y saciedad."},
+      {c:"F",t:"Pera al horno con nueces",r:"1 persona",p:"Postre completo",tm:"35 min",ing:["Pera 200 g","Nueces 15 g"],prep:"Nueces picadas por encima.",cook:"180 °C · 35 min",val:"Grasas saludables."},
+      {c:"F",t:"Manzana al horno con uvas",r:"1 persona",p:"Postre",tm:"30 min",ing:["Manzana 150 g","Uvas 100 g"],prep:"Trozos + uvas enteras.",cook:"180 °C · 30 min",val:"Dulce sin azúcar añadido."},
+      {c:"F",t:"Manzana al horno con dátil picado",r:"1 persona",p:"Postre puntual",tm:"30 min",ing:["Manzana 200 g","Dátil 1 ud (15 g)"],prep:"Repartir el dátil picado sobre la manzana.",cook:"180 °C · 30 min",val:"Más dulce, puntual."},
+      {c:"F",t:"Bandeja de fruta al horno para la semana",r:"1 persona (varias tomas)",p:"Base de postres",tm:"40 min",ing:["Fruta variada 500 g"],prep:"Trozos grandes en una bandeja grande.",cook:"180 °C · 40 min",val:"Fruta cocinada disponible varios días."},
+      {c:"F",t:"Manzana al horno con jengibre suave",r:"1 persona",p:"Postre",tm:"30 min",ing:["Manzana 200 g","Jengibre en polvo (una pizca)","Agua 30 ml"],prep:"Trozos grandes + agua + jengibre.",cook:"180 °C · 30 min",val:"Ayuda a la digestión (toque suave)."},
+      {c:"F",t:"Pera al horno con naranja",r:"1 persona",p:"Postre",tm:"35 min",ing:["Pera 200 g","Zumo de naranja 50 ml"],prep:"Trozos + zumo.",cook:"180 °C · 35 min",val:"Suave y refrescante."},
+      {c:"F",t:"Plátano al horno con pera",r:"1 persona",p:"Merienda",tm:"25 min",ing:["Plátano 120 g","Pera 120 g"],prep:"Rodajas gruesas en la bandeja.",cook:"180 °C · 25 min",val:"Merienda fácil."},
+      {c:"F",t:"Piña al horno con coco rallado",r:"1 persona",p:"Postre",tm:"30 min",ing:["Piña 200 g","Coco rallado 10 g"],prep:"Coco por encima.",cook:"190 °C · 30 min",val:"Dulzor natural y saciante."},
+      {c:"F",t:"Melocotón al horno con almendra molida",r:"1 persona",p:"Postre",tm:"30 min",ing:["Melocotón 200 g","Almendra molida 10 g"],prep:"Almendra por encima del melocotón.",cook:"180 °C · 30 min",val:"Suave con grasas saludables."},
+      {c:"F",t:"Manzana al horno con arándanos",r:"1 persona",p:"Postre",tm:"30 min",ing:["Manzana 150 g","Arándanos 80 g"],prep:"Mezclar en la bandeja.",cook:"180 °C · 30 min",val:"Antioxidantes."},
+      {c:"F",t:"Pera al horno con manzana y canela",r:"1 persona",p:"Postre",tm:"35 min",ing:["Pera 120 g","Manzana 120 g","Canela"],prep:"Cortar y espolvorear canela.",cook:"180 °C · 35 min",val:"Clásico bien tolerado."},
+      {c:"F",t:"Manzana al horno con queso fresco (añadido en frío)",r:"1 persona",p:"Postre completo",tm:"30 min",ing:["Manzana 200 g","Queso fresco bajo en grasa 80 g"],prep:"Cocer la manzana y añadir el queso cuando esté templada.",cook:"180 °C · 30 min",val:"Más proteína y saciedad."},
+      {c:"F",t:"Plátano al horno con cacao y manzana",r:"1 persona",p:"Merienda puntual",tm:"25 min",ing:["Plátano 100 g","Manzana 100 g","Cacao puro 5 g"],prep:"Espolvorear cacao sobre la fruta cortada.",cook:"180 °C · 25 min",val:"Dulce controlado, ocasional."},
+      {c:"F",t:"Bandeja grande de fruta al horno para toda la semana",r:"1 persona (varias tomas)",p:"Base de postres",tm:"40 min",ing:["Fruta variada 600 g (manzana, pera, plátano, piña)"],prep:"Trozos grandes, bandeja grande, todo junto.",cook:"180 °C · 40 min",val:"Postres saludables para varios días."}
+    ];
+
+    // ====== UI ======
+    const CATS = [
+      {k:"ALL", label:"Todas", badge:""},
+      {k:"V", label:"Verduras", badge:"v"},
+      {k:"C", label:"Carnes", badge:"c"},
+      {k:"P", label:"Pescado", badge:"p"},
+      {k:"L", label:"Legumbres", badge:"l"},
+      {k:"F", label:"Fruta", badge:"f"},
+    ];
+
+    const catName = (c)=>({V:"Verduras",C:"Carnes",P:"Pescado",L:"Legumbres",F:"Fruta"}[c]||"");
+    const badgeClass = (c)=>({V:"v",C:"c",P:"p",L:"l",F:"f"}[c]||"");
+
+    const chipsEl = document.getElementById("chips");
+    const gridEl  = document.getElementById("grid");
+    const qEl     = document.getElementById("q");
+    const metaEl  = document.getElementById("meta");
+
+    let state = {cat:"ALL", q:""};
+
+    function buildChips(){
+      chipsEl.innerHTML = "";
+      CATS.forEach(x=>{
+        const b = document.createElement("button");
+        b.className = "chip" + (state.cat===x.k ? " active":"");
+        b.type="button";
+        b.textContent = x.label;
+        b.onclick = ()=>{ state.cat=x.k; render(); buildChips(); };
+        chipsEl.appendChild(b);
+      });
+    }
+
+    function esc(s){ return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m])); }
+
+    function matches(r){
+      if(state.cat!=="ALL" && r.c!==state.cat) return false;
+      const q = state.q.trim().toLowerCase();
+      if(!q) return true;
+      const blob = [
+        r.t, r.r, r.p, r.tm,
+        (r.ing||[]).join(" "),
+        r.prep||"", r.cook||"", r.val||""
+      ].join(" ").toLowerCase();
+      return blob.includes(q);
+    }
+
+    function render(){
+      const list = RECIPES.filter(matches);
+
+      const total = RECIPES.length;
+      const shown = list.length;
+      const catLabel = state.cat==="ALL" ? "Todas" : catName(state.cat);
+      metaEl.textContent = `Mostrando ${shown} de ${total} · Categoría: ${catLabel}` + (state.q.trim()?` · Búsqueda: “${state.q.trim()}”`:"");
+
+      if(!list.length){
+        gridEl.innerHTML = `<div class="empty">No hay resultados. Prueba con otra palabra o cambia de categoría.</div>`;
+        return;
+      }
+
+      gridEl.innerHTML = list.map(r=>{
+        const badge = catName(r.c);
+        const bcls = badgeClass(r.c);
+        const kpis = [
+          r.r ? `<span class="kpi">Ración: ${esc(r.r)}</span>`:"",
+          r.p ? `<span class="kpi">Tipo: ${esc(r.p)}</span>`:"",
+          r.tm? `<span class="kpi">Tiempo: ${esc(r.tm)}</span>`:""
+        ].filter(Boolean).join("");
+
+        const ing = (r.ing||[]).map(x=>`<li>${esc(x)}</li>`).join("");
+
+        return `
+          <article class="card">
+            <div class="cardHead">
+              <h2 class="title">${esc(r.t)}</h2>
+              <span class="badge ${bcls}">${esc(badge)}</span>
+            </div>
+            <div style="padding:0 16px 14px">
+              <div class="kpis">${kpis}</div>
+            </div>
+            <details>
+              <summary>
+                <span>Ver receta</span>
+                <span style="opacity:.8">▼</span>
+              </summary>
+              <div class="content">
+                <div class="box">
+                  <h3>Ingredientes</h3>
+                  <ul>${ing}</ul>
+                </div>
+                <div class="box">
+                  <h3>Preparación</h3>
+                  <p>${esc(r.prep||"")}</p>
+                </div>
+                <div class="box">
+                  <h3>Cocción</h3>
+                  <p>${esc(r.cook||"")}</p>
+                </div>
+                <div class="box">
+                  <h3>Valoración</h3>
+                  <p>${esc(r.val||"")}</p>
+                </div>
+              </div>
+            </details>
+          </article>
+        `;
+      }).join("");
+    }
+
+    qEl.addEventListener("input", ()=>{
+      state.q = qEl.value;
+      render();
+    });
+
+    buildChips();
+    render();
+  </script>
+</body>
+</html>
